@@ -12,12 +12,13 @@ namespace ITI_Project.Configurations
             entity.Property(e => e.DeptId).HasColumnName("DeptID");
             entity.Property(e => e.InsId).HasColumnName("InsID");
 
-            entity.HasOne(d => d.Dept).WithMany()
+            entity.HasOne(d => d.Dept).WithMany(d=>d.DeptInstructors)
                 .HasForeignKey(d => d.DeptId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("dept_instructor_deptid_foreign");
 
-            entity.HasOne(d => d.Ins).WithMany()
+            entity.HasOne(d => d.Ins)
+                .WithMany(i => i.DeptInstructors)
                 .HasForeignKey(d => d.InsId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("dept_instructor_insid_foreign");

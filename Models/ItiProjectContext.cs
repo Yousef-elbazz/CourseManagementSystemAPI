@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
 
 namespace ITI_Project.Models;

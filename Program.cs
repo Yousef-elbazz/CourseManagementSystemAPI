@@ -1,10 +1,14 @@
 
+using FluentAssertions.Common;
 using ITI_Project.Models;
 using Microsoft.EntityFrameworkCore;
 
+
+
 namespace ITI_Project
 {
-    public class Program() {  
+    public class Program()
+    {
 
         public static void Main(string[] args)
         {
@@ -41,9 +45,8 @@ namespace ITI_Project
 
 
             app.MapControllers();
-
             app.Run();
-            Console.WriteLine("Yousef Elbaz");
+
         }
     }
 }
