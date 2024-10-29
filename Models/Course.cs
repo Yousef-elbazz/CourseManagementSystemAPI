@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ITI_Project.Models;
 
@@ -17,4 +18,7 @@ public partial class Course
     public string? Description { get; set; }
 
     public virtual Topic Topic { get; set; } = null!;
+
+    public virtual ICollection<Department> Departments { get; set; } = new List<Department>();
+
 }

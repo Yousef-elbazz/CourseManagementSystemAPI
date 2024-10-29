@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ITI_Project.Models;
 
@@ -9,7 +10,7 @@ public partial class Department
 
     public string? Name { get; set; }
 
-    public DateOnly? MgrHiringDate { get; set; }
+    public virtual ICollection<Course> Courses { get; set; } = new List<Course>();
 
     public virtual ICollection<Student> Students { get; set; } = new List<Student>();
 }

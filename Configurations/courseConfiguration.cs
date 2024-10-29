@@ -10,6 +10,8 @@ namespace ITI_Project.Configurations
         {
             entity.HasKey(e => e.CourseId).HasName("course_courseid_primary");
 
+            entity.HasMany(d => d.Departments).WithMany(c => c.Courses).UsingEntity(j => j.ToTable("CourseDepartment")); ;
+
             entity.ToTable("course");
 
             entity.Property(e => e.CourseId)

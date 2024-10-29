@@ -49,13 +49,7 @@ namespace ITI_Project.Controllers
                     Grade = s.Grade,
                 }).FirstOrDefaultAsync();
             return Ok(student);
-
         }
-        
-        //implicitly typed local variable ===>VAR
-
-
-
 
     }
 }
