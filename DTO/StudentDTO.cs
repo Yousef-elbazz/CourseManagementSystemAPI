@@ -10,6 +10,7 @@ namespace ITI_Project.DTO
         public string DeptName { get; set; }
         public string? Grade { get; set; }     // Grade of the student
         // If you want to include the department name or other details, you could add those properties as well.
+        public int? Degree { get; set; }
         public List<string> Courses { get; set; } = new List<string>();
     }
 }

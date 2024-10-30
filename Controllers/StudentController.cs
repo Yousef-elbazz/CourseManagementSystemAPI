@@ -40,6 +40,7 @@ namespace ITI_Project.Controllers
             var student = await _context.Students
                 .Include(s => s.Dept)
                 .Include(s=>s.Courses)
+                .Include(s=>s.StdDegree)
                 .Where(s => s.StdId == id)
                 .Select(s => new StudentDTO
                 {
@@ -49,6 +50,7 @@ namespace ITI_Project.Controllers
                     DeptName = s.Dept.Name,
                     Grade = s.Grade,
                     Courses = s.Courses.Select(s => s.CrsName).ToList(),
+                    Degree = s.StdDegree.Degree,
                 }).FirstOrDefaultAsync();
             return Ok(student);
         }
