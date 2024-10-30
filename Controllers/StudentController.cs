@@ -39,6 +39,7 @@ namespace ITI_Project.Controllers
         {
             var student = await _context.Students
                 .Include(s => s.Dept)
+                .Include(s=>s.Courses)
                 .Where(s => s.StdId == id)
                 .Select(s => new StudentDTO
                 {
@@ -47,9 +48,57 @@ namespace ITI_Project.Controllers
                     Lname = s.Lname,
                     DeptName = s.Dept.Name,
                     Grade = s.Grade,
+                    Courses = s.Courses.Select(s => s.CrsName).ToList(),
                 }).FirstOrDefaultAsync();
             return Ok(student);
         }
+        public async Task<IActionResult> deleteone(int id)
+        {
+
+            var deleteStudent = await _context.Students.FirstOrDefaultAsync(x => x.StdId == id);
+            if (deleteStudent == null)
+            {
+                return NotFound($"the id {id} is not exist");
+            }
+            _context.Students.Remove(deleteStudent);
+            _context.SaveChanges();
+            return Ok(deleteStudent);
+        }
+
+        [HttpPost] // add
+        public async Task<IActionResult> Add(int id, string Fname, string Lname, int age , string address , Department Did , string grade)
+        {
+            Student student = new()
+            {
+                StdId = id,
+                Fname = Fname,
+                Lname = Lname,
+               Age = age,
+               Address = address,
+               DeptId = Did.DeptId,
+               Grade = grade,
+
+            };
+            await _context.Students.AddAsync(student);
+            _context.SaveChanges();
+            return Ok();
+        }
+
+        /*
+                 [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateStd(int id)
+        {
+
+            var deleteStudent = await _context.Students.FirstOrDefaultAsync(x => x.StdId == id);
+            if (deleteStudent == null)
+            {
+                return NotFound($"the id {id} is not exist");
+            }
+            
+            _context.SaveChanges();
+            return Ok(deleteStudent);
+        }
+         */
 
     }
 }
