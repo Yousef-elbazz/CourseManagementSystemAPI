@@ -7,6 +7,14 @@ using System.Diagnostics;
 
 namespace ITI_Project.Controllers
 {
+    public class StudenttDTO
+    {
+        public int StdId { get; set; }         // Unique identifier for the student
+        public string Fname { get; set; }
+        public string Lname { get; set; }
+        public int DeptID { get; set; }
+        public string? Grade { get; set; }
+    }
     [Route("api/[controller]")]
     [ApiController]
     public class StudentController : ControllerBase
@@ -93,40 +101,59 @@ namespace ITI_Project.Controllers
             return NoContent(); // Return a 204 No Content response
         }
 
-        [HttpPost] // add
-        public async Task<IActionResult> Add(int id, string Fname, string Lname, int age , string address , Department Did , string grade)
+        [HttpPost] //add
+        public async Task<IActionResult> Add(int id, string Fname, string Lname, int age, string address, int deptId, string grade)
         {
+            if (_context.Students.Any(s => s.StdId == id))
+            {
+                return BadRequest("Student with this ID already exists.");
+            }
+
             Student student = new()
             {
                 StdId = id,
                 Fname = Fname,
                 Lname = Lname,
-               Age = age,
-               Address = address,
-               DeptId = Did.DeptId,
-               Grade = grade,
-
+                Age = age,
+                Address = address,
+                DeptId = deptId,
+                Grade = grade,
             };
+
             await _context.Students.AddAsync(student);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             return Ok();
         }
 
-        /*
-                 [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateStd(int id)
-        {
 
-            var deleteStudent = await _context.Students.FirstOrDefaultAsync(x => x.StdId == id);
-            if (deleteStudent == null)
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Put(int id, [FromBody] StudenttDTO St)
+        {
+            if (id != St.StdId)
             {
-                return NotFound($"the id {id} is not exist");
+                return BadRequest(); // Return 400 if ID doesn't match
             }
-            
-            _context.SaveChanges();
-            return Ok(deleteStudent);
+
+            var Updatestudent = await _context.Students.FindAsync(id);
+            if (Updatestudent == null)
+            {
+                return NotFound(); // Return 404 if department not found
+            }
+
+            // Update only the class attributes
+            Updatestudent.Lname = St.Lname;
+            Updatestudent.Fname = St.Fname;
+            Updatestudent.Grade = St.Grade;
+            Updatestudent.DeptId = St.DeptID;
+
+
+            // Save changes
+            await _context.SaveChangesAsync();
+
+            return NoContent(); // Return 204 No Content to indicate success
         }
-         */
 
     }
+  
 }

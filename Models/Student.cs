@@ -19,6 +19,7 @@ public partial class Student
     public string? Address { get; set; }
 
     public string? Grade { get; set; }
+    
 
     public virtual Department Dept { get; set; } = null!;
     public virtual ICollection<StudCourse> StudCourses { get; set; } = new List<StudCourse>();
