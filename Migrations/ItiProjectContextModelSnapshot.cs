@@ -355,11 +355,11 @@ namespace ITI_Project.Migrations
 
             modelBuilder.Entity("ITI_Project.Models.Course", b =>
                 {
-<<<<<<< HEAD
+
                     b.Navigation("CourseInstructors");
-=======
+
                     b.Navigation("StudCourses");
->>>>>>> 2c37f7d773613f3a66829f368b00c369af79bf90
+
                 });
 
             modelBuilder.Entity("ITI_Project.Models.Department", b =>
