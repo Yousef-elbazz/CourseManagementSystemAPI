@@ -1,4 +1,5 @@
-﻿using ITI_Project.Models;
+﻿using ITI_Project.DTO;
+using ITI_Project.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
@@ -38,12 +39,19 @@ namespace ITI_Project.Controllers
         public async Task<ActionResult<TopicDTO>> GetTopicById(int id)
         {
             var topic = await _context.Topics
-                .Where(t => t.TopicId == id)
-                .Select(t => new TopicDTO
-                {
-                    TopicId = t.TopicId,
-                    Name = t.Name
-                }).FirstOrDefaultAsync();
+        .Where(t => t.TopicId == id)
+        .Select(t => new TopicDTO
+        {
+            TopicId = t.TopicId,
+            Name = t.Name,
+            // Add other properties from the Topic model here
+            Courses = t.Courses.Select(c => new CourseDTO
+            {
+                CourseId = c.CourseId,
+                CourseName = c.CrsName, // Assuming Degree is part of the Course model
+            }).ToList()
+        })
+        .FirstOrDefaultAsync();
 
             if (topic == null)
                 return NotFound($"Topic with ID {id} not found.");
@@ -65,21 +73,6 @@ namespace ITI_Project.Controllers
             await _context.SaveChangesAsync();
 
             return Ok(topicDto);
-        }
-
-        // DELETE: api/Topic/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteTopic(int id)
-        {
-            var topic = await _context.Topics.FindAsync(id);
-
-            if (topic == null)
-                return NotFound($"Topic with ID {id} not found.");
-
-            _context.Topics.Remove(topic);
-            await _context.SaveChangesAsync();
-
-            return Ok(topic);
         }
 
         // PUT: api/Topic/5

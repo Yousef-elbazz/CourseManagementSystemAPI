@@ -3,6 +3,7 @@ using ITI_Project.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Diagnostics;
 
 namespace ITI_Project.Controllers
 {
@@ -26,8 +27,14 @@ namespace ITI_Project.Controllers
                     StdId = s.StdId,
                     Fname = s.Fname,
                     Lname = s.Lname,
-                    DeptName = s.Dept.Name,
                     Grade = s.Grade,
+                    DeptName = s.Dept.Name,
+                    Courses = s.StudCourses.Select(sc => new CourseDTO
+                    {
+                        CourseId = sc.Course.CourseId,
+                        CourseName = sc.Course.CrsName,
+                        Degree = sc.Degree
+                    }).ToList()
                 })
                 .ToListAsync();
 
@@ -62,18 +69,28 @@ namespace ITI_Project.Controllers
 
             return Ok(student);
         }
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> deleteone(int id)
-        {
 
-            var deleteStudent = await _context.Students.FirstOrDefaultAsync(x => x.StdId == id);
-            if (deleteStudent == null)
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteStudent(int id)
+        {
+            // Find the student
+            var student = await _context.Students.FindAsync(id);
+            if (student == null)
             {
-                return NotFound($"the id {id} is not exist");
+                return NotFound($"Student with ID {id} not found.");
             }
-            _context.Students.Remove(deleteStudent);
-            _context.SaveChanges();
-            return Ok(deleteStudent);
+
+            // Find and remove related records in the StudCourses table
+            var studCourses = await _context.StudCourses.Where(sc => sc.StdId == id).ToListAsync();
+            _context.StudCourses.RemoveRange(studCourses); // Remove related records
+
+            // Now remove the student
+            _context.Students.Remove(student);
+
+            // Save changes
+            await _context.SaveChangesAsync();
+
+            return NoContent(); // Return a 204 No Content response
         }
 
         [HttpPost] // add

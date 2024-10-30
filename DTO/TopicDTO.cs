@@ -1,4 +1,5 @@
-﻿using ITI_Project.Models;
+﻿using ITI_Project.DTO;
+using ITI_Project.Models;
 
 namespace ITI_Project.Models
 {
@@ -6,8 +7,6 @@ namespace ITI_Project.Models
     {
         public int TopicId { get; set; }
         public string Name { get; set; }
-
-        // List of related topics
-        public List<TopicDTO> RelatedTopics { get; set; } = new List<TopicDTO>();
+        public List<CourseDTO> Courses { get; set; } = new List<CourseDTO>();
     }
 }
