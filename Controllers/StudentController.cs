@@ -35,25 +35,34 @@ namespace ITI_Project.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<StudentDTO>> GetStudentById(int id)//5
+        public async Task<ActionResult<StudentDTO>> GetStudentById(int id)
         {
             var student = await _context.Students
-                .Include(s => s.Dept)
-                .Include(s=>s.Courses)
-                .Include(s=>s.StdDegree)
                 .Where(s => s.StdId == id)
                 .Select(s => new StudentDTO
                 {
                     StdId = s.StdId,
                     Fname = s.Fname,
                     Lname = s.Lname,
-                    DeptName = s.Dept.Name,
                     Grade = s.Grade,
-                    Courses = s.Courses.Select(s => s.CrsName).ToList(),
-                    Degree = s.StdDegree.Degree,
-                }).FirstOrDefaultAsync();
+                    DeptName = s.Dept.Name,
+                    Courses = s.StudCourses.Select(sc => new CourseDTO
+                    {
+                        CourseId = sc.Course.CourseId,
+                        CourseName = sc.Course.CrsName,
+                        Degree = sc.Degree
+                    }).ToList()
+                })
+                .FirstOrDefaultAsync();
+
+            if (student == null)
+            {
+                return NotFound($"Student with ID {id} not found.");
+            }
+
             return Ok(student);
         }
+        [HttpDelete("{id}")]
         public async Task<IActionResult> deleteone(int id)
         {
 

@@ -8,17 +8,19 @@ namespace ITI_Project.Configurations
     {
         public void Configure(EntityTypeBuilder<StudCourse> entity)
         {
-            entity.HasKey(k => new {k.StdId,k.CourseId});
+            entity.HasKey(k => new { k.StdId, k.CourseId });
 
             entity.Property(e => e.CourseId).HasColumnName("courseID");
             entity.Property(e => e.StdId).HasColumnName("stdID");
 
-            entity.HasOne(d => d.Course).WithMany()
+            entity.HasOne(d => d.Course)
+                .WithMany(p => p.StudCourses) // Link to a collection in Course
                 .HasForeignKey(d => d.CourseId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("stud_course_courseid_foreign");
 
-            entity.HasOne(d => d.Std).WithMany()
+            entity.HasOne(d => d.Std)
+                .WithMany(p => p.StudCourses) // Link to a collection in Student
                 .HasForeignKey(d => d.StdId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("stud_course_stdid_foreign");
