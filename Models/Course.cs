@@ -18,6 +18,7 @@ public partial class Course
     public string? Description { get; set; }
 
     public virtual Topic Topic { get; set; } = null!;
+    public virtual ICollection<StudCourse> StudCourses { get; set; } = new List<StudCourse>();
 
     public virtual ICollection<Department> Departments { get; set; } = new List<Department>();
     public virtual ICollection<CourseInstructor> CourseInstructors { get; set; } = new List<CourseInstructor>();

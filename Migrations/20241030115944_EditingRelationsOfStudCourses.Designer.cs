@@ -4,6 +4,7 @@ using ITI_Project.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ITI_Project.Migrations
 {
     [DbContext(typeof(ItiProjectContext))]
-    partial class ItiProjectContextModelSnapshot : ModelSnapshot
+    [Migration("20241030115944_EditingRelationsOfStudCourses")]
+    partial class EditingRelationsOfStudCourses
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -83,24 +86,18 @@ namespace ITI_Project.Migrations
                         .HasColumnType("int")
                         .HasColumnName("courseID");
 
+                    b.Property<string>("Evaluation")
+                        .HasColumnType("text");
+
                     b.Property<int>("InsId")
                         .HasColumnType("int")
                         .HasColumnName("InsID");
 
-                    b.Property<string>("Evaluation")
-                        .HasColumnType("text");
-
-                    b.Property<int>("InsId1")
-                        .HasColumnType("int");
-
-                    b.HasKey("CourseId", "InsId")
-                        .HasName("PK_CourseInstructor");
+                    b.HasIndex("CourseId");
 
                     b.HasIndex("InsId");
 
-                    b.HasIndex("InsId1");
-
-                    b.ToTable("course_instructor", (string)null);
+                    b.ToTable("course-Instructor", (string)null);
                 });
 
             modelBuilder.Entity("ITI_Project.Models.Department", b =>
@@ -148,17 +145,14 @@ namespace ITI_Project.Migrations
                         .HasColumnName("address");
 
                     b.Property<int?>("HourRate")
-                        .HasColumnType("int")
-                        .HasColumnName("HourRate");
+                        .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)")
-                        .HasColumnName("name");
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<int?>("Salary")
-                        .HasColumnType("int")
-                        .HasColumnName("Salary");
+                        .HasColumnType("int");
 
                     b.HasKey("InsId")
                         .HasName("instructor_insid_primary");
@@ -277,22 +271,16 @@ namespace ITI_Project.Migrations
             modelBuilder.Entity("ITI_Project.Models.CourseInstructor", b =>
                 {
                     b.HasOne("ITI_Project.Models.Course", "Course")
-                        .WithMany("CourseInstructors")
+                        .WithMany()
                         .HasForeignKey("CourseId")
                         .IsRequired()
                         .HasConstraintName("course_instructor_courseid_foreign");
 
-                    b.HasOne("ITI_Project.Models.Instructor", null)
-                        .WithMany("CourseInstructors")
+                    b.HasOne("ITI_Project.Models.Instructor", "Ins")
+                        .WithMany()
                         .HasForeignKey("InsId")
                         .IsRequired()
                         .HasConstraintName("course_instructor_insid_foreign");
-
-                    b.HasOne("ITI_Project.Models.Instructor", "Ins")
-                        .WithMany()
-                        .HasForeignKey("InsId1")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
 
                     b.Navigation("Course");
 
@@ -350,11 +338,7 @@ namespace ITI_Project.Migrations
 
             modelBuilder.Entity("ITI_Project.Models.Course", b =>
                 {
-<<<<<<< HEAD
-                    b.Navigation("CourseInstructors");
-=======
                     b.Navigation("StudCourses");
->>>>>>> 2c37f7d773613f3a66829f368b00c369af79bf90
                 });
 
             modelBuilder.Entity("ITI_Project.Models.Department", b =>
@@ -366,8 +350,6 @@ namespace ITI_Project.Migrations
 
             modelBuilder.Entity("ITI_Project.Models.Instructor", b =>
                 {
-                    b.Navigation("CourseInstructors");
-
                     b.Navigation("DeptInstructors");
                 });
 
