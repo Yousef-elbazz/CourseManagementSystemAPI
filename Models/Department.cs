@@ -7,7 +7,7 @@ namespace ITI_Project.Models;
 public partial class Department
 {
     public int DeptId { get; set; }
-
+    
     public string? Name { get; set; }
 
     public virtual ICollection<Course> Courses { get; set; } = new List<Course>();

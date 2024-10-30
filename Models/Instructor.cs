@@ -15,5 +15,5 @@ public partial class Instructor
 
     public string? Address { get; set; }
     public virtual ICollection<DeptInstructor> DeptInstructors { get; set; } = new List<DeptInstructor>();
-
+    public virtual ICollection<CourseInstructor> CourseInstructors { get; set; } = new List<CourseInstructor>();
 }
