@@ -28,20 +28,21 @@ namespace ITI_Project.Controllers
                 Salary = s.Salary,
                 Address = s.Address,
                 DepartmentNames = s.DeptInstructors.Select(f => f.Dept.Name).ToList(),
-                Courses = s.CourseInstructors.Select(f =>f.Course.CrsName).ToList()
+                Courses = s.CourseInstructors.Select(f => f.Course.CrsName).ToList()
 
             }).ToList();
-            return Ok(getall);
+            return Ok(AllAtt);
         }
+
         [HttpGet("{id}")]
         public async Task<ActionResult<InstractorDTO>> getID(int id)
         {
             var instractor = await _DB.Instructors
-                .Include(s=>s.CourseInstructors)
-                .ThenInclude(s=>s.CourseId)
-                .Include(s=>s.DeptInstructors)
-                .ThenInclude(d=>d.DeptId)
-                .FirstOrDefaultAsync(k=>k.InsId==id);
+                .Include(s => s.CourseInstructors)
+                .ThenInclude(s => s.Course)
+                .Include(s => s.DeptInstructors)
+                .ThenInclude(d => d.Dept)
+                .FirstOrDefaultAsync(k => k.InsId == id);
             if (instractor == null)
                 return NotFound();
 
@@ -60,11 +61,11 @@ namespace ITI_Project.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task <IActionResult> put(int id, [FromBody] InstractorDTO dto)
+        public async Task<IActionResult> put(int id, [FromBody] InstractorDTO dto)
         {
             if (id != dto.Id)
                 return BadRequest();
-            var UpdateIns =await _DB.Instructors.FindAsync(id);
+            var UpdateIns = await _DB.Instructors.FindAsync(id);
             if (UpdateIns == null)
                 return NotFound();
 
@@ -74,6 +75,7 @@ namespace ITI_Project.Controllers
             UpdateIns.HourRate = dto.HourRate;
             UpdateIns.Salary = dto.Salary;
 
+
             await _DB.SaveChangesAsync();
             return NoContent();
 
@@ -81,9 +83,9 @@ namespace ITI_Project.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> post(int id , int salary , int hourrate, string address,string name )
+        public async Task<IActionResult> post(int id, int salary, int hourrate, string address, string name)
         {
-            if(_DB.Instructors.Any(g=>g.InsId ==id))
+            if (_DB.Instructors.Any(g => g.InsId == id))
                 return BadRequest("instructor is exist");
 
             Instructor inst = new()
@@ -105,17 +107,16 @@ namespace ITI_Project.Controllers
 
         public async Task<IActionResult> delete(int id)
         {
-            var instructor = await _DB.Instructors.FindAsync( id);
-            if (instructor == null) 
+            var instructor = await _DB.Instructors.FindAsync(id);
+            if (instructor == null)
                 return NotFound();
-            var deleteCourse = await _DB.CourseInstructors.Where(l=>l.InsId == id).ToListAsync();
+            var deleteCourse = await _DB.CourseInstructors.Where(l => l.InsId == id).ToListAsync();
             _DB.CourseInstructors.RemoveRange(deleteCourse);
-            var deletedept = await _DB.DeptInstructors.Where(k=>k.InsId == id).ToListAsync();
+            var deletedept = await _DB.DeptInstructors.Where(k => k.InsId == id).ToListAsync();
             _DB.DeptInstructors.RemoveRange(deletedept);
-
+            _DB.Instructors.Remove(instructor);
             await _DB.SaveChangesAsync();
-          return  NoContent();
-        }
-
-    } 
+            return NoContent();
+        }    
+    }
 }
