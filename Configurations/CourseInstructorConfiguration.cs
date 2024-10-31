@@ -23,7 +23,7 @@ namespace ITI_Project.Configurations
             entity.HasOne(ci => ci.Course)
                 .WithMany(c => c.CourseInstructors)
                 .HasForeignKey(ci => ci.CourseId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("course_instructor_courseid_foreign");
 
             entity.HasOne(ci => ci.Ins)

@@ -31,7 +31,7 @@ namespace ITI_Project.Configurations
             entity.HasOne(d => d.Topic)
                 .WithMany(p => p.Courses)
                 .HasForeignKey(d => d.TopicId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("course_topicid_foreign");
 
             // Configuring Many-to-Many relationship with Department

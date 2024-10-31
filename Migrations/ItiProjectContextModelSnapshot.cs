@@ -350,16 +350,9 @@ namespace ITI_Project.Migrations
 
             modelBuilder.Entity("ITI_Project.Models.Course", b =>
                 {
-                    b.Navigation("StudCourses");
-                });
-
-            modelBuilder.Entity("ITI_Project.Models.Course", b =>
-                {
-
                     b.Navigation("CourseInstructors");
 
                     b.Navigation("StudCourses");
-
                 });
 
             modelBuilder.Entity("ITI_Project.Models.Department", b =>
