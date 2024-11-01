@@ -86,29 +86,57 @@ namespace ITI_Project.Controllers
             return NoContent(); // Return 204 No Content to indicate success
         }
 
-        // POST: api/department
+        // POST: api/Courses
         [HttpPost]
-        public async Task<ActionResult<DepartmentDTO>> Post([FromBody] DepartmentDTO departmentDto)
+        public async Task<IActionResult> Adddepart([FromBody] DepartmenttDTO CD)
         {
-            var department = new Department
+            var Dept = new Department
             {
-                Name = departmentDto.Name,
-                // Initialize lists if needed
-                Students = new List<Student>(), // If you want to handle students
-                // Instructors can be handled later based on your design
+               DeptId = CD.Id,
+               Name = CD.Name,
             };
-
-            _context.Departments.Add(department);
+            await _context.Departments.AddAsync(Dept);
             await _context.SaveChangesAsync();
 
-            // Map the created department to DTO
-            departmentDto.Id = department.DeptId;
-
-            return CreatedAtAction(nameof(GetById), new { id = departmentDto.Id }, departmentDto); // Return 201 Created
+            return Ok(CD);
         }
 
-        // DELETE: api/department/{id}
-        [HttpDelete("{id}")]
+
+
+    }
+    public class DepartmenttDTO
+    {
+        
+        public int Id { get; set; }
+        public string Name { get; set; }
+    }
+
+
+    /*
+
+    // POST: api/department
+    [HttpPost]
+    public async Task<ActionResult<DepartmentDTO>> Post([FromBody] DepartmentDTO departmentDto)
+    {
+        var department = new Department
+        {
+            Name = departmentDto.Name,
+            // Initialize lists if needed
+            Students = new List<Student>(), // If you want to handle students
+            // Instructors can be handled later based on your design
+        };
+
+        _context.Departments.Add(department);
+        await _context.SaveChangesAsync();
+
+        // Map the created department to DTO
+        departmentDto.Id = department.DeptId;
+
+        return CreatedAtAction(nameof(GetById), new { id = departmentDto.Id }, departmentDto); // Return 201 Created
+    }
+    */
+    // DELETE: api/department/{id}
+    /*[HttpDelete("{id}")]
         public async Task<IActionResult> DeleteById(int id)
         {
             var department = await _context.Departments.FindAsync(id);
@@ -122,7 +150,7 @@ namespace ITI_Project.Controllers
 
             return NoContent(); // Return 204 No Content to indicate success
         }
-    }
+    }*/
 }
 
 
