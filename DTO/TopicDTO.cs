@@ -9,4 +9,11 @@ namespace ITI_Project.Models
         public string Name { get; set; }
         public List<CourseDTO> Courses { get; set; } = new List<CourseDTO>();
     }
+    public class TopiccDTO
+    {
+        public int TopicId { get; set; }
+        public string Name { get; set; }
+
+    }
+
 }

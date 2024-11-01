@@ -9,17 +9,20 @@ namespace ITI_Project.Configurations
         public void Configure(EntityTypeBuilder<CourseInstructor> entity)
         {
             entity
-               .HasKey(ci => new { ci.CourseId, ci.InsId }) // Composite key
-               .HasName("PK_CourseInstructor");
+                .HasKey(ci => new { ci.CourseId, ci.InsId }) // Composite primary key
+                .HasName("PK_CourseInstructor");
 
             entity.ToTable("course_instructor");
 
-            // Configuring columns
             entity.Property(e => e.CourseId).HasColumnName("courseID");
             entity.Property(e => e.InsId).HasColumnName("InsID");
             entity.Property(e => e.Evaluation).HasColumnType("text");
 
-            // Configuring relationships
+            entity.HasIndex(ci => new { ci.CourseId, ci.InsId })
+                .IsUnique()
+                .HasDatabaseName("IX_Unique_CourseInstructor");
+
+            // Configuring the relationships
             entity.HasOne(ci => ci.Course)
                 .WithMany(c => c.CourseInstructors)
                 .HasForeignKey(ci => ci.CourseId)

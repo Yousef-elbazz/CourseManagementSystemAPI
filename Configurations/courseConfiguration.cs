@@ -31,20 +31,9 @@ namespace ITI_Project.Configurations
             entity.HasOne(d => d.Topic)
                 .WithMany(p => p.Courses)
                 .HasForeignKey(d => d.TopicId)
-                .OnDelete(DeleteBehavior.Cascade)
+                .OnDelete(DeleteBehavior.Restrict)
                 .HasConstraintName("course_topicid_foreign");
 
-            // Configuring Many-to-Many relationship with Department
-            entity.HasMany(d => d.Departments)
-                .WithMany(c => c.Courses)
-                .UsingEntity(j => j.ToTable("CourseDepartment"));
-
-            // Configuring Many-to-Many relationship with Instructor via CourseInstructor
-            entity.HasMany(c => c.CourseInstructors)
-                .WithOne()
-                .HasForeignKey(ci => ci.CourseId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("course_instructor_courseid_foreign");
         }
     }
 }

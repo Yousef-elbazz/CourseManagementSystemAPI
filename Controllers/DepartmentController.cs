@@ -18,7 +18,35 @@ namespace ITI_Project.Controllers
             _context = context;
         }
 
+        // DELETE: api/department/{id}
+        #region Delete
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteById(int id)
+        {
+            var department = await _context.Departments.FindAsync(id);
+            if (department == null)
+            {
+                return NotFound();
+            }
+
+            try
+            {
+                _context.Departments.Remove(department);
+                await _context.SaveChangesAsync();
+
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                // Log the error for debugging
+                Console.Error.WriteLine($"Error deleting department: {ex.Message}");
+                return BadRequest("An error occurred while deleting the department.");
+            }
+        }
+        #endregion
+
         // GET: api/department
+        #region GetAll
         [HttpGet]
         public async Task<ActionResult<IEnumerable<DepartmentDTO>>> GetAll()
         {
@@ -34,9 +62,11 @@ namespace ITI_Project.Controllers
             }).ToList();
 
             return Ok(departmentDtos);
-        }
+        } 
+        #endregion
 
         // GET: api/department/{id}
+        #region GetByID
         [HttpGet("{id}")]
         public async Task<ActionResult<DepartmentDTO>> GetById(int id)
         {
@@ -62,9 +92,12 @@ namespace ITI_Project.Controllers
 
             return Ok(departmentDto); // Return 200 OK with the DTO
         }
+        #endregion
+
         // PUT: api/department/{id}
+        #region Put
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(int id, [FromBody] DepartmentDTO departmentDto)
+        public async Task<IActionResult> Put(int id, [FromBody] DepartmenttDTO departmentDto)
         {
             if (id != departmentDto.Id)
             {
@@ -85,72 +118,34 @@ namespace ITI_Project.Controllers
 
             return NoContent(); // Return 204 No Content to indicate success
         }
+        #endregion
 
         // POST: api/Courses
+        #region Post
         [HttpPost]
         public async Task<IActionResult> Adddepart([FromBody] DepartmenttDTO CD)
         {
             var Dept = new Department
             {
-               DeptId = CD.Id,
-               Name = CD.Name,
+                DeptId = CD.Id,
+                Name = CD.Name,
             };
             await _context.Departments.AddAsync(Dept);
             await _context.SaveChangesAsync();
 
             return Ok(CD);
-        }
-
-
+        } 
+        #endregion
 
     }
-    public class DepartmenttDTO
-    {
-        
-        public int Id { get; set; }
-        public string Name { get; set; }
-    }
+  
 
 
-    /*
+   
 
-    // POST: api/department
-    [HttpPost]
-    public async Task<ActionResult<DepartmentDTO>> Post([FromBody] DepartmentDTO departmentDto)
-    {
-        var department = new Department
-        {
-            Name = departmentDto.Name,
-            // Initialize lists if needed
-            Students = new List<Student>(), // If you want to handle students
-            // Instructors can be handled later based on your design
-        };
-
-        _context.Departments.Add(department);
-        await _context.SaveChangesAsync();
-
-        // Map the created department to DTO
-        departmentDto.Id = department.DeptId;
-
-        return CreatedAtAction(nameof(GetById), new { id = departmentDto.Id }, departmentDto); // Return 201 Created
-    }
-    */
-    // DELETE: api/department/{id}
-    /*[HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteById(int id)
-        {
-            var department = await _context.Departments.FindAsync(id);
-            if (department == null)
-            {
-                return NotFound(); // Return 404 if department not found
-            }
-
-            _context.Departments.Remove(department);
-            await _context.SaveChangesAsync();
-
-            return NoContent(); // Return 204 No Content to indicate success
-        }
-    }*/
+   
+   
 }
+
 
 

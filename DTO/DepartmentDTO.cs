@@ -11,6 +11,11 @@ namespace ITI_Project.DTO
 
         // List of instructor names
         public List<string> InstructorNames { get; set; } = new List<string>();
+    }
+    public class DepartmenttDTO
+    {
 
+        public int Id { get; set; }
+        public string Name { get; set; }
     }
 }

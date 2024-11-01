@@ -22,16 +22,17 @@ namespace ITI_Project.Controllers
         }
 
         // GET: api/Courses
+        #region GET
         [HttpGet]
         public async Task<ActionResult<IEnumerable<CourseInfDTO>>> GetCourses()
         {
             var courses = await _context.Courses
-        .Include(c => c.Departments) // Include Departments
-        .Include(c => c.CourseInstructors) // Include Instructors
-            .ThenInclude(ci => ci.Ins) // Include Instructor details
-        .Include(c => c.StudCourses) // Include CourseStudents
-            .ThenInclude(cs => cs.Std) // Include Student details
-        .ToListAsync();
+                                        .Include(c => c.Departments)
+                                        .Include(c => c.CourseInstructors)
+                                        .ThenInclude(ci => ci.Ins)
+                                        .Include(c => c.StudCourses)
+                                        .ThenInclude(cs => cs.Std)
+                                        .ToListAsync();
 
 
             var AllAtt = courses.Select(s => new CourseInfDTO
@@ -41,25 +42,25 @@ namespace ITI_Project.Controllers
                 Description = s.Description,
                 Duration = s.CrsDuration ?? 0, // Set default value if CrsDuration is null
                 DepartmentNames = s.Departments.Select(d => d.Name).ToList(),
-                instructor= s.CourseInstructors.Select(ci => ci.Ins.Name).ToList(),
+                instructor = s.CourseInstructors.Select(ci => ci.Ins.Name).ToList(),
                 stdcourse = s.StudCourses.Select(cs => cs.Std.Fname).ToList() // Add students
 
             }).ToList();
             return Ok(AllAtt);
         }
-
-
+        #endregion
 
         // GET: api/Courses/{id}
+        #region GetByID
         [HttpGet("{id}")]
         public async Task<ActionResult<CourseInfDTO>> GetCourseById(int id)
         {
             var course = await _context.Courses
-                .Include(c => c.Departments) // Include Departments
-                .Include(c => c.CourseInstructors) // Include Instructors
-                    .ThenInclude(ci => ci.Ins) // Include Instructor details
-                .Include(c => c.StudCourses) // Include CourseStudents
-                    .ThenInclude(cs => cs.Std) // Include Student details
+                .Include(c => c.Departments)
+                .Include(c => c.CourseInstructors)
+                    .ThenInclude(ci => ci.Ins)
+                .Include(c => c.StudCourses)
+                    .ThenInclude(cs => cs.Std)
                 .FirstOrDefaultAsync(c => c.CourseId == id);
 
             // Handle not found scenario
@@ -73,18 +74,18 @@ namespace ITI_Project.Controllers
                 Id = course.CourseId,
                 Name = course.CrsName,
                 Description = course.Description,
-                Duration = course.CrsDuration ?? 0, // Set default value if CrsDuration is null
+                Duration = course.CrsDuration ?? 0,
                 DepartmentNames = course.Departments.Select(d => d.Name).ToList(),
                 instructor = course.CourseInstructors.Select(ci => ci.Ins.Name).ToList(),
-                stdcourse = course.StudCourses.Select(cs => cs.Std.Fname).ToList() // Add students
+                stdcourse = course.StudCourses.Select(cs => cs.Std.Fname).ToList()
             };
 
             return Ok(courseInfDTO);
         }
-
+        #endregion
 
         // PUT: api/Courses/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        #region PUT
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(int id, [FromBody] CourseeDTO cr)
         {
@@ -106,14 +107,14 @@ namespace ITI_Project.Controllers
             Updatecourse.Description = cr.Description;
             Updatecourse.CrsDuration = cr.CrsDuration;
 
-
-
-            // Save changes
             await _context.SaveChangesAsync();
 
             return NoContent(); // Return 204 No Content to indicate success
         }
+        #endregion
+
         // POST: api/Courses
+        #region Post
         [HttpPost]
         public async Task<IActionResult> AddCourse([FromBody] CourseeDTO CD)
         {
@@ -130,20 +131,33 @@ namespace ITI_Project.Controllers
 
             return Ok(CD);
         }
+        #endregion
 
+        // DELETE: api/Courses/{id}
+        #region Delete
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteCourse(int id)
+        {
+            var course = await _context.Courses
+                .Include(c => c.Departments)
+                .Include(c => c.CourseInstructors)
+                .Include(c => c.StudCourses)
+                .FirstOrDefaultAsync(c => c.CourseId == id);
 
+            if (course == null)
+            {
+                return NotFound(); // Return 404 if course not found
+            }
 
+            _context.Courses.Remove(course);
+            await _context.SaveChangesAsync();
+
+            return NoContent(); // Return 204 No Content on successful deletion
+        } 
+        #endregion
     }
-    public class CourseeDTO
-    {
-        public int CourseId { get; set; }
 
-        public int TopicId { get; set; }
 
-        public string? CrsName { get; set; }
 
-        public int? CrsDuration { get; set; }
 
-        public string? Description { get; set; }
-    }
 }

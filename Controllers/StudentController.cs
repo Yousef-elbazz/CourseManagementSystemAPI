@@ -7,14 +7,7 @@ using System.Diagnostics;
 
 namespace ITI_Project.Controllers
 {
-    public class StudenttDTO
-    {
-        public int StdId { get; set; }         // Unique identifier for the student
-        public string Fname { get; set; }
-        public string Lname { get; set; }
-        public int DeptID { get; set; }
-        public string? Grade { get; set; }
-    }
+   
     [Route("api/[controller]")]
     [ApiController]
     public class StudentController : ControllerBase
@@ -26,6 +19,8 @@ namespace ITI_Project.Controllers
             _context = context;
         }
 
+        // GET: api/department
+        #region GetAll
         [HttpGet]
         public async Task<ActionResult<IEnumerable<StudentDTO>>> GetStudents()
         {
@@ -48,7 +43,10 @@ namespace ITI_Project.Controllers
 
             return Ok(students);
         }
+        #endregion
 
+        // GET: api/department/{id}
+        #region GetByID
         [HttpGet("{id}")]
         public async Task<ActionResult<StudentDTO>> GetStudentById(int id)
         {
@@ -77,7 +75,10 @@ namespace ITI_Project.Controllers
 
             return Ok(student);
         }
+        #endregion
 
+        // DELETE: api/department/{id}
+        #region Delete
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteStudent(int id)
         {
@@ -100,7 +101,10 @@ namespace ITI_Project.Controllers
 
             return NoContent(); // Return a 204 No Content response
         }
+        #endregion
 
+        // POST: api/Courses
+        #region Post
         [HttpPost] //add
         public async Task<IActionResult> Add(int id, string Fname, string Lname, int age, string address, int deptId, string grade)
         {
@@ -124,9 +128,10 @@ namespace ITI_Project.Controllers
             await _context.SaveChangesAsync();
             return Ok();
         }
+        #endregion
 
-
-
+        // PUT: api/department/{id}
+        #region Put
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(int id, [FromBody] StudenttDTO St)
         {
@@ -152,8 +157,8 @@ namespace ITI_Project.Controllers
             await _context.SaveChangesAsync();
 
             return NoContent(); // Return 204 No Content to indicate success
-        }
-
+        } 
+        #endregion
     }
   
 }

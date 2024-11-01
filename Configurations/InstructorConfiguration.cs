@@ -29,13 +29,6 @@ namespace ITI_Project.Configurations
 
             entity.Property(e => e.Salary)
                 .HasColumnName("Salary");
-
-            // Configuring Many-to-Many relationship with Course via CourseInstructor
-            entity.HasMany(i => i.CourseInstructors)
-                .WithOne()
-                .HasForeignKey(ci => ci.InsId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("course_instructor_insid_foreign");
         }
     }
 }

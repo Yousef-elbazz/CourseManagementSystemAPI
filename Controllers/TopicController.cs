@@ -20,6 +20,7 @@ namespace ITI_Project.Controllers
         }
 
         // GET: api/Topic
+        #region Get
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TopicDTO>>> GetTopics()
         {
@@ -33,8 +34,10 @@ namespace ITI_Project.Controllers
 
             return Ok(topics);
         }
+        #endregion
 
         // GET: api/Topic/5
+        #region GetbyID
         [HttpGet("{id}")]
         public async Task<ActionResult<TopicDTO>> GetTopicById(int id)
         {
@@ -58,10 +61,12 @@ namespace ITI_Project.Controllers
 
             return Ok(topic);
         }
+        #endregion
 
         // POST: api/Topic
+        #region Post
         [HttpPost]
-        public async Task<IActionResult> AddTopic([FromBody] TopicDTO topicDto)
+        public async Task<IActionResult> AddTopic([FromBody] TopiccDTO topicDto)
         {
             var topic = new Topic
             {
@@ -74,10 +79,12 @@ namespace ITI_Project.Controllers
 
             return Ok(topicDto);
         }
+        #endregion
 
         // PUT: api/Topic/5
+        #region Put
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateTopic(int id, [FromBody] TopicDTO topicDto)
+        public async Task<IActionResult> UpdateTopic(int id, [FromBody] TopiccDTO topicDto)
         {
             if (id != topicDto.TopicId)
                 return BadRequest("ID mismatch.");
@@ -91,5 +98,30 @@ namespace ITI_Project.Controllers
 
             return NoContent();
         }
+        #endregion
+
+        // DELETE: api/department/{id}
+        #region Delete
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteTopic(int id)
+        {
+            var topic = await _context.Topics
+                .Include(t => t.Courses) // Include related courses (optional)
+                .FirstOrDefaultAsync(t => t.TopicId == id);
+
+            if (topic == null)
+            {
+                return NotFound($"Topic with ID {id} not found.");
+            }
+
+            // Check for related courses before deletion (optional)
+            // You might want to handle scenarios where a topic has associated courses.
+
+            _context.Topics.Remove(topic);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        } 
+        #endregion
     }
 }

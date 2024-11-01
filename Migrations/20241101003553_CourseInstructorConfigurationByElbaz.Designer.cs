@@ -4,6 +4,7 @@ using ITI_Project.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ITI_Project.Migrations
 {
     [DbContext(typeof(ItiProjectContext))]
-    partial class ItiProjectContextModelSnapshot : ModelSnapshot
+    [Migration("20241101003553_CourseInstructorConfigurationByElbaz")]
+    partial class CourseInstructorConfigurationByElbaz
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -94,10 +97,6 @@ namespace ITI_Project.Migrations
                         .HasName("PK_CourseInstructor");
 
                     b.HasIndex("InsId");
-
-                    b.HasIndex("CourseId", "InsId")
-                        .IsUnique()
-                        .HasDatabaseName("IX_Unique_CourseInstructor");
 
                     b.ToTable("course_instructor", (string)null);
                 });
@@ -267,7 +266,7 @@ namespace ITI_Project.Migrations
                     b.HasOne("ITI_Project.Models.Topic", "Topic")
                         .WithMany("Courses")
                         .HasForeignKey("TopicId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("course_topicid_foreign");
 
@@ -299,14 +298,12 @@ namespace ITI_Project.Migrations
                     b.HasOne("ITI_Project.Models.Department", "Dept")
                         .WithMany("DeptInstructors")
                         .HasForeignKey("DeptId")
-                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired()
                         .HasConstraintName("dept_instructor_deptid_foreign");
 
                     b.HasOne("ITI_Project.Models.Instructor", "Ins")
                         .WithMany("DeptInstructors")
                         .HasForeignKey("InsId")
-                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired()
                         .HasConstraintName("dept_instructor_insid_foreign");
 

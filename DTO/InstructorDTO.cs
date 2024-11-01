@@ -1,6 +1,6 @@
 ﻿namespace ITI_Project.DTO
 {
-    public class InstractorDTO
+    public class InstructorDTO
     {
         public int Id { get; set; }
         public string Name { get; set; }

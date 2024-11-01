@@ -16,11 +16,13 @@ namespace ITI_Project.Controllers
             _DB = DB;
         }
 
+        // GET: api/department
+        #region GetAll
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<InstractorDTO>>> getall()
+        public async Task<ActionResult<IEnumerable<InstructorDTO>>> getall()
         {
             var instractor = await _DB.Instructors.ToListAsync();
-            var AllAtt = instractor.Select(s => new InstractorDTO
+            var AllAtt = instractor.Select(s => new InstructorDTO
             {
                 Id = s.InsId,
                 Name = s.Name,
@@ -33,9 +35,12 @@ namespace ITI_Project.Controllers
             }).ToList();
             return Ok(AllAtt);
         }
+        #endregion
 
+        // GET: api/department/{id}
+        #region GetByID
         [HttpGet("{id}")]
-        public async Task<ActionResult<InstractorDTO>> getID(int id)
+        public async Task<ActionResult<InstructorDTO>> getID(int id)
         {
             var instractor = await _DB.Instructors
                 .Include(s => s.CourseInstructors)
@@ -46,7 +51,7 @@ namespace ITI_Project.Controllers
             if (instractor == null)
                 return NotFound();
 
-            var data = new InstractorDTO
+            var data = new InstructorDTO
             {
                 Id = instractor.InsId,
                 Name = instractor.Name,
@@ -59,9 +64,12 @@ namespace ITI_Project.Controllers
             return Ok(data);
 
         }
+        #endregion
 
+        // PUT: api/department/{id}
+        #region Put
         [HttpPut("{id}")]
-        public async Task<IActionResult> put(int id, [FromBody] InstractorDTO dto)
+        public async Task<IActionResult> put(int id, [FromBody] InstructorDTO dto)
         {
             if (id != dto.Id)
                 return BadRequest();
@@ -81,7 +89,10 @@ namespace ITI_Project.Controllers
 
 
         }
+        #endregion
 
+        // POST: api/Courses
+        #region Post
         [HttpPost]
         public async Task<IActionResult> post(int id, int salary, int hourrate, string address, string name)
         {
@@ -102,7 +113,10 @@ namespace ITI_Project.Controllers
             await _DB.SaveChangesAsync();
             return Ok();
         }
+        #endregion
 
+        // DELETE: api/department/{id}
+        #region Delete
         [HttpDelete("{id}")]
 
         public async Task<IActionResult> delete(int id)
@@ -117,6 +131,7 @@ namespace ITI_Project.Controllers
             _DB.Instructors.Remove(instructor);
             await _DB.SaveChangesAsync();
             return NoContent();
-        }    
+        }     
+        #endregion
     }
 }

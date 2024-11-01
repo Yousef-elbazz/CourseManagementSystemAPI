@@ -14,15 +14,15 @@ namespace ITI_Project.Configurations
             entity.Property(e => e.StdId).HasColumnName("stdID");
 
             entity.HasOne(d => d.Course)
-    .WithMany(p => p.StudCourses)
-    .HasForeignKey(d => d.CourseId)
-    .OnDelete(DeleteBehavior.Cascade) // Change to cascade
-    .HasConstraintName("stud_course_courseid_foreign");
+                 .WithMany(p => p.StudCourses)
+                 .HasForeignKey(d => d.CourseId)
+                 .OnDelete(DeleteBehavior.Restrict) // Change to cascade
+                 .HasConstraintName("stud_course_courseid_foreign");
 
             entity.HasOne(d => d.Std)
                 .WithMany(p => p.StudCourses)
                 .HasForeignKey(d => d.StdId)
-                .OnDelete(DeleteBehavior.Cascade) // Change to cascade
+                .OnDelete(DeleteBehavior.Restrict) // Change to cascade
                 .HasConstraintName("stud_course_stdid_foreign");
         }
     }
