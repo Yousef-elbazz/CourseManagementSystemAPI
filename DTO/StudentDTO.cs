@@ -15,7 +15,7 @@ namespace ITI_Project.DTO
     }
     public class StudenttDTO
     {
-        public int StdId { get; set; }         
+
         public string Fname { get; set; }
         public string Lname { get; set; }
         public int DeptID { get; set; }

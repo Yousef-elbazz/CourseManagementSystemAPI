@@ -135,10 +135,6 @@ namespace ITI_Project.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(int id, [FromBody] StudenttDTO St)
         {
-            if (id != St.StdId)
-            {
-                return BadRequest(); // Return 400 if ID doesn't match
-            }
 
             var Updatestudent = await _context.Students.FindAsync(id);
             if (Updatestudent == null)
